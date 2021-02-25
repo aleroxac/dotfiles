@@ -2,6 +2,6 @@ secret
 .ssh
 .aws
 .vpn
-./.vim/plugged/
-././fonts/bitmap/
+.vim/plugged/
+.fonts/bitmap/
 oh-my-zsh
