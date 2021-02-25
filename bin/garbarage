@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+helpMsg="USAGE: $0 [OPTIONS]
+  -l, --list   Mostra a lista de pacotes no cache de seu gerenciador de pacotes
+  -c, --clear  Limpa o cache do diretório ${dirpkg}"
+
+# List and clean packages in your package manager cache
+[[ -d /var/cache/pacman/pkg/ ]] && dirpkg=/var/cache/pacman/pkg
+[[ -d /var/cache/apt/archives ]] && dirpkg=/var/cache/apt/archives
+
+listGarb() { # Show the pacman pkg cache
+    ls++ --potsf -lSrh $dirpkg || ls -lSrh $dirpkg
+    echo $(ls $dirpkg|wc -l) packages, consumindo $(du -h $dirpkg 2> /dev/null)
+}
+
+cleanGarb() { # Clean the pacman pkg cache
+    count=$(find /var/cache/pacman/pkg/ ${HOME}/.cache/yay/ -maxdepth 1 |wc -l)
+    if [[ $count -gt 2 ]]; then
+        sudo rm -rf $dirpkg/*
+        if yay -V > /dev/null; then
+            yay -Sc --noconfirm
+            sudo rm -rf ${HOME}/.cache/yay/*
+        elif apt --version > /dev/null; then
+            sudo apt clean
+            sudo apt autoclean -y
+            sudo apt remove --purge $(deborphan)
+            sudo apt autoremove -y
+        fi
+    fi
+}
+
+if [[ ! -z "$1" ]]; then
+    case "$1" in
+        -l|--list) listGarb               ;;
+        -c|--clear) cleanGarb && listGarb ;;
+        *) echo -e "${helpMsg}"           ;;
+    esac
+else
+    listGarb
+fi

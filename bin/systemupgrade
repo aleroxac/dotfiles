@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+yay --batchinstall --combinedupgrade --noeditmenu --noconfirm -Syyu
+echo "$(date +'%Y/%m/%d %H:%M:%S') - System upgraded" >> /var/log/updatesystem.log

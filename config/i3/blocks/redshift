@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+
+## ---------- VARIABLES
+current_temperature=$(grep 'night' ~/.config/redshift/redshift.conf | cut -d'=' -f2)
+current_status=$(pgrep redshift-gtk > /dev/null && echo on || echo off)
+var_value=250
+
+## ---------- FUNCTIONS
+function restart_redshift() {
+    if [[ $(ps aux | grep -c redshift) -gt 1 ]]; then
+	pkill redshift
+	redshift-gtk &
+	echo ${current_temperature}
+    fi
+}
+
+function change_temperature() {
+    [[ "$1" == 'inc' ]] && operator='+' || operator='-'
+
+    new_temperature=$(echo "${current_temperature} ${operator} ${var_value}" | bc)
+    sed -i "s/temp-night=.*/temp-night=${new_temperature}/g" ~/.config/redshift/redshift.conf
+    restart_redshift
+}
+
+function toggle_redishift() {
+    if pgrep redshift-gtk; then
+	kill -SIGUSR1 $(pgrep redshift-gtk | head -1)
+    fi
+}
+
+
+## ---------- MAIN
+case "${BLOCK_BUTTON}" in
+    3) toggle_redishift 		;;  # right click, start/kill
+    #4) change_temperature inc 		;; # scroll up, increase
+    #5) change_temperature dec 		;; # scroll down, decrease
+    *) echo ${current_status} 		;;
+esac

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+VPNC_FILE='/var/run/vpnc.pid'
+[[ -e "${VPNC_FILE}" ]] && echo 'on' || echo 'off'

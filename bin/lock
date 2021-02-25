@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+#---------- VARIABLES
+screenshot_file='/tmp/screen.png'
+
+
+#---------- MAIN
+scrot $screenshot_file
+corrupter -mag 5 -boffset 5 $screenshot_file $screenshot_file
+betterlockscreen -u $screenshot_file && betterlockscreen --lock

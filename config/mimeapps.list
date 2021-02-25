@@ -1,0 +1,29 @@
+[Default Applications]
+x-scheme-handler/http=google-chrome.desktop
+x-scheme-handler/https=google-chrome.desktop
+x-scheme-handler/about=google-chrome.desktop
+x-scheme-handler/unknown=google-chrome.desktop
+x-scheme-handler/magnet=qbittorrent.desktop
+x-scheme-handler/webcal=google-chrome.desktop
+text/html=google-chrome.desktop
+text/x-readme=sublime_text.desktop
+text/x-python=code-oss.desktop
+text/x-install=code-oss.desktop
+text/plain=code-oss.desktop
+text/markdown=code-oss.desktop
+image/jpeg=sxiv.desktop
+image/png=sxiv.desktop
+audio/mpeg=mpv.desktop
+audio/mp3=mpv.desktop
+video/x-msvideo=mpv.desktop
+video/mp4=mpv.desktop
+video/mkv=mpv.desktop
+application/pdf=evince.desktop
+application/xml=code-oss.desktop
+application/x-theme=code-oss.desktop;
+application/x-desktop=nautilus-autorun-software.desktop;google-chrome.desktop
+application/x-shellscript=code-oss.desktop
+application/x-trash=code-oss.desktop
+
+[Added Associations]
+application/octet-stream=code-oss.desktop;

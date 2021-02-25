@@ -1,0 +1,7 @@
+[user]
+	email = acardoso.ti@gmail.com
+	name = aleroxac
+[core]
+	editor = vim
+[alias]
+	s = status

@@ -1,0 +1,16 @@
+#!/bin/bash
+while getopts ab:cde OPCAO; do
+    case "${OPCAO}" in
+        a) recebi_a=1 ;;
+        b) argumento_b="${OPTARG}" ;;
+        c) recebi_c=1 ;;
+        d) recebi_d=1 ;;
+        e) recebi_e=1 ;;
+    esac
+done
+  
+[ ${recebi_a} ] && echo "A opção A foi ativada." && echo "--> aaaaa   tirei o pau no gato-to..."
+[ ${argumento_b} ] && echo "B foi ativada." && echo "o conteúdo passado foi ${argumento_b}."
+[ ${recebi_c} ] && echo "Opção C foi ativada."
+[ ${recebi_d} ] && echo "Opção D foi usada."
+[ ${recebi_e} ] && echo "Opção E foi passada."

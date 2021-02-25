@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+google-chrome-stable \
+    "https://mail.google.com/mail/u/0/#inbox" \
+    "https://mail.google.com/mail/u/1/#inbox" \
+    "https://feedly.com/i/my" \
+    "https://www.youtube.com/" \
+    "https://www.notion.so/aleroxac/Grok-8a4af67f1e40450092c7b12efc1edad7" \
+    "https://app.slack.com/client/T0A4LNGF6/DJUSMT9CY" \
+    "https://sa-east-1.console.aws.amazon.com/ec2/v2/home?region=sa-east-1#Instances:sort=tag:Name" \
+    "https://s24x7.pinpoint.net.br/app/client#/alarms" \
+    "https://esprinter.atlassian.net/jira/software/projects/SRE/boards/150"

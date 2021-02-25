@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+activeapp="$(cat /proc/$(xdotool getwindowpid $(xdotool getwindowfocus))/comm)"
+activeapptitle=$(xdotool getactivewindow getwindowname)
+windowtitle="${activeapp^^} $activeapptitle"
+#nofchars=${#windowtitle}
+flag=1
+white_black="<span background='white' foreground='black'>"
+lightgreen_black="<span background='lightgreen' foreground='black'>"
+closespan="</span>"
+
+[ "${#windowtitle}" -ge 15 ] && CUSTOMTAB="                                                   "
+[ "${#windowtitle}" -ge 50 ] && CUSTOMTAB="                                     " && activeapptitle="${activeapptitle:0:30}..." 
+[ "${#windowtitle}" -le 5 ] && flag=0
+
+if [ $flag -eq 1 ]; then
+    echo "$white_black ${activeapp^^} $closespan$lightgreen_black $activeapptitle $closespan ${CUSTOMTAB}"
+else
+    echo
+fi

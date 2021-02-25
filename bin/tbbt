@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+SEASON=$1
+SERIE_PATH="/mnt/dados/bkp-hd-externo/augusto/videos/series/The Big Bang Theory/The Big Bang Theory - S${SEASON}"
+
+function execEpisode() {
+    for episode in $*; do
+        #echo "${SERIE_PATH}/The.Big.Bang.Theory.S${SEASON}E${episode}.720p.HDTV.X264-DIMENSION.mkv "
+        echo "The.Big.Bang.Theory.S${SEASON}E${episode}.720p.HDTV.X264-DIMENSION.mkv"
+    done
+}
+
+[ -z "$1" ] && echo "Escolha a temporada..." && exit 1
+
+if [ -z "$2" ]; then
+    EPISODE="."
+    cd "${SERIE_PATH}" || return
+    mpv "${EPISODE}"
+else
+    cd "${SERIE_PATH}" || return
+    mpv $(execEpisode "${@:2}" | xargs)
+fi
+

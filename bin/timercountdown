@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+
+
+from datetime import datetime   
+from sys import argv, exit
+
+
+
+if argv[1] in ('tomorrow', 'amanha', 'amanhã'):
+    data = str(datetime.today())[:-16]
+    data_formatada = data[0:8] + str( int( int(data[8:10]) + 1 ) )
+    hora = '00:00:00'
+    target = data_formatada.split('-') + hora.split(':')
+    print(datetime.strptime(data_formatada,'%Y-%m-%d').ctime())
+    # exit(1)
+elif not ':' in argv[1] and argv[2] in ('days', 'dias'):
+    num_days = int(argv[1])
+    data = str(datetime.today())[:-16]
+    data_formatada = data[0:8] + str( int( int(data[8:10]) + num_days) )
+    hora = '00:00:00'
+    target = data_formatada.split('-') + hora.split(':')
+    print(datetime.strptime(data_formatada,'%Y-%m-%d').ctime())
+    # exit(1)
+else:
+    # Se o usuário inserir data e hora
+    if len(argv) == 3:
+        if ':' in argv[1]:
+            # Hora + Data
+            data = argv[2].replace('-', '/')
+            target = data.split('/') + argv[1].split(':')
+            print(target)
+        else:
+            # Data + hora
+            data = argv[1].replace('-', '/')
+            target = data.split('/') + argv[2].split(':')
+
+    elif len(argv) == 2:
+
+        # Se o usuário inserir somente a hora
+        if ':' in argv[1]:
+            # Hora
+            data = str(datetime.today())[:-16]
+
+            if len(argv[1].split(':')) == 1:
+                hora = argv[1] + ':00:00'
+            elif len(argv[1].split(':')) == 2:
+                hora = argv[1] + ':00'
+            else:
+                hora = argv[1]
+
+            target = data.split('-') + hora.split(':')
+
+        elif not ':' in argv[1]:
+            data = str(datetime.today())[:-16]
+            hora = argv[1] + ':00:00'
+            target = data.split('-') + hora.split(':')
+        
+        # Se o usuário inserir somente a data
+        elif '/' in argv[1]:
+            # Data
+            data = argv[1].replace('-', '/')        
+            data = argv[1]
+            hora = '00:00:00'
+            target = data.split('/') + hora.split(':')
+        elif '-' in argv[1]:
+            # Data
+            data = argv[1].replace('-', '/')        
+            data = argv[1]
+            hora = '00:00:00'
+            target = data.split('-') + hora.split(':')
+        else:
+            data = str(datetime.today())[:-16]
+            target = data + str(datetime.now())[:-7]
+
+
+print(
+    str(
+        datetime(
+                int(target[0]),
+                int(target[1]),
+                int(target[2]),
+                int(target[3]),
+                int(target[4]),
+                int(target[5])
+        ) - datetime.now() 
+    )[:-7]
+)

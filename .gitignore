@@ -1,0 +1,7 @@
+secret
+.ssh
+.aws
+.vpn
+./.vim/plugged/
+././fonts/bitmap/
+oh-my-zsh
