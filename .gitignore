@@ -3,5 +3,6 @@ secret
 .aws
 .vpn
 .vim/plugged/
+.vim/colors/*.vim
 .fonts/bitmap/
 oh-my-zsh
