@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import requests, json, os
+
+RABBITMQ_URL = os.getenv("RABBITMQ_URL")
+RABBITMQ_USERNAME = os.getenv(RABBITMQ_USERNAME)
+RABBITMQ_PASSWORD = os.getenv(RABBITMQ_PASSWORD)
+target_queues = ["store_online_check", "payment", "menu"]
+
+for queue in target_queues:
+    queue_metrics = json.loads(
+        requests.get(
+            f"{RABBITMQ_URL}/api/queues/djbfbkng/{queue}",
+            auth=(
+                RABBITMQ_USERNAME,
+                RABBITMQ_PASSWORD
+            )
+        ).text
+    )
+    print(
+        queue_metrics["name"],
+        queue_metrics["state"],
+        queue_metrics["messages_ready"],
+        queue_metrics["messages_unacknowledged"],
+        queue_metrics["consumers"]
+    )

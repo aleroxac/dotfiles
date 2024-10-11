@@ -1,0 +1,10 @@
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set menu-complete-display-prefix on
+
+"\e[1;5C": forward-word   # ctrl + right
+"\e[1;5D": backward-word  # ctrl + left 
+"\t": menu-complete
+"\e[Z": menu-complete-backward
+
+TAB:menu-complete

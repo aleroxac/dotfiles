@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+# ls aliases
+alias ls="ls --group-directories-first --color=auto"
+alias lss="ls++ --potsf -A --group-directories-first --sort=extension"
+alias lsa="exa -lhagm --color-scale --group-directories-first --sort=type --git"
+
+# Quick navigation
+alias dow='cd ~/Downloads'
+alias down='dow'
+alias work='cd ~/Workspace'
+alias doc='cd ~/Documents'
+alias pic='cd ~/Documents/Pictures'
+alias mov='cd ~/Documents/Videos'
+alias dotfiles="cd ~/.dotfiles"
+alias drop='cd ~/Dropbox'
+alias bin="cd ~/.dotfiles/bin/"
+alias blocks="cd ~/.config/i3/blocks"
+
+# Dotfiles configs
+alias bashrc='vim ~/.bashrc'
+alias zshrc='vim ~/.zshrc'
+alias profile='vim ~/.profile'
+alias gitconf='vim ~/.gitconfig'
+alias xinitrc='vim ~/.xinitrc'
+alias xresources='vim ~/.dotfiles/.Xresources'
+alias aliases='vim ~/.dotfiles/.aliases'
+alias shellrc='vim ~/.dotfiles/.shellrc'
+alias mimeapps='vim ~/.config/mimeapps.list'
+alias userdirs='vim ~/.config/user-dirs.dirs'
+alias i3conf='vim ~/.config/i3/config'
+alias i3bconf='vim ~/.config/i3/i3blocks'
+alias i3confn='vim ~/.config/i3/config.notebook'
+alias i3bconfn='vim ~/.config/i3/i3blocks.notebook'
+alias vimrc='vim ~/.vimrc'
+alias nvimupdate='nvim +PluginInstall +qall'
+alias xresources='vim ~/.dotfiles/.Xresources'
+alias chfeedlykey="vim ~/.dotfiles/secret -c ':normal 5ggf=2ld$' -c ':normal \"*pA\"' -c ':wq'; i3-msg restart"
+
+# System aliases
+alias sudo='sudo '
+alias please='sudo'
+alias vim='nvim'
+alias py='python3'
+alias ipy='ipython3'
+alias sx='startx'
+alias src='source ~/.dotfiles/shellrc'
+alias ztail="zless"
+alias neo="neofetch"
+alias sys="systemctl"
+alias xru="xrdb ~/.dotfiles/.Xresources"
+alias up="yay --batchinstall --combinedupgrade --noeditmenu --noconfirm -Syyu"
+alias duh="du -sch * | sort -h"
+alias shells="sed 's/.*\///g; s/^[#].*//g' /etc/shells | sort | uniq | nl | column -t"
+alias scrotscr='scrot ${SCREENSHOTS_DIR}/$(date %Y-%m-%d-%T).png || mkdir -p ${SCREENSHOTS_DIR}'
+alias plexon="sudo systemctl start plexmediaserver.service"
+alias plexoff="sudo systemctl stop plexmediaserver.service"
+alias stremioff="ps aux | grep -i stremio | grep -v grep | cut -d' ' -f2 | xargs kill"
+alias pmgrep="pacman -Q | grep -i "
+alias hgrep="history | grep -Ei --color "
+alias psgrep="ps -NC grep | grep -i "
+alias garb="garbarage"
+alias binfo="bootinfo"
+alias sysup="systemupgrade"
+alias esa="exa -Flamg -s type --git"
+alias dotenv="source <(sed -r 's/(^[A-Z])/export \1/g' .env)"
+alias drai="docker rmi $(docker images -a -q)"
+alias drac="docker rm $(docker ps -a -q)"
+alias delete="rm -rf"
+alias myip="curl ifconfig.me; echo"
+
+
+# vpn
+#alias vpnon="docker-compose -f ~/.vpn/aws-sso/docker-compose.yml up -d && sleep 5s && docker logs -n1 aws-vpn-client | xargs xdg-open"
+#alias vpnoff="docker-compose -f ~/.vpn/aws-sso/docker-compose.yml down && notify-send -u low 'VPN - Intelipost' 'Desconectando da VPN..'"
+#alias vpnps="pgrep openvpn"
+alias vpnon="notify-send -u low 'VPN - Pede Pronto' 'Conectando...' && nohup sudo openvpn --config ~/.vpn/pedepronto/acardoso.ovpn &"
+alias vpnoff="sudo pkill openvpn && notify-send -u low 'VPN - Pede Pronto' 'Desconectado'"
+alias vpnps="pgrep openvpn"
+
+# kubernetes
+alias k=kubectl
+alias kns=kubens
+alias kctx=kubectx
+
+# docker
+alias docker-prune-containers="docker rm -f $(docker ps -aq)"
+alias docker-prune-images="docker image rm -f $(docker images -q)"
+alias docker-prune-volumes="docker volume rm -f $(docker volume ls -q)"
+alias docker-prune-system="docker system prune -f"
+alias docker-prune-all="docker-prune-containers;docker-prune-images;docker-prune-volumes;docker-prune-system"
+alias drai="docker rmi $(docker images -a -q)"
+alias drac="docker rm $(docker ps -a -q)"
+
+# docker-tools
+alias psql="docker run --rm --network=host -it postgres psql"
+
+# sandbox
+alias taskctl="python ~/Workspace/aleroxac/sandbox/groking/taskctl/src/infra/cli/main.py"
+
+## golang
+alias modinit="go mod init github.com/aleroxac/$(basename ${PWD})"
+alias tidy="go mod tidy"
+

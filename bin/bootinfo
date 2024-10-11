@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Create and show bootup statitics by systemd-analyze utility
+source "$HOME/.config/user-dirs.dirs"
+BOOT_SVG_PATH="$XDG_PICTURES_DIR/boot"
+
+view(){
+    # Show a svg bootup graphic
+    newerfile=$(find "$BOOT_SVG_PATH" -exec ls -lrth {} + | tail -1 | awk '{print $9}')
+    xdg-open "$BOOT_SVG_PATH/${newerfile}"
+}
+
+create() {
+    #Create a svg bootup graphic
+    file="boot-$(date +%Y%m%d.%H%M%S).svg"
+    [ -d "$BOOT_SVG_PATH" ] || mkdir -p "$BOOT_SVG_PATH"
+    systemd-analyze plot > "$BOOT_SVG_PATH/${file}"
+}
+
+if [ -n "$1" ]; then                                                       
+    case $1 in
+        -c|--create) create ;;
+        -v|--view) view ;;
+        *) echo -e "USAGE: $0 [OPTIONS]\n  -c, --create   Create a svg bootup graphic\n  -v, --view     Show a svg bootup graphic" ;;
+    esac
+else
+    create && view
+fi  

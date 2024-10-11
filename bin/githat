@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+
+GIT_HAT=$1
+PROFILES="work, me"
+
+[ -z "${GIT_HAT}" ] && echo "Please, inform which profile you want to assume. Available profiles: ${PROFILES}"
+case "${GIT_HAT}" in
+    "work")
+        echo "Switch to [${GIT_HAT}] profile"
+        git config --global user.name "augusto_cardoso"
+        git config --global user.email "augusto.cardoso@verifymy.io"
+    ;;
+    "personal"|"me")
+        echo "Switch to [${GIT_HAT}] profile"
+        git config --global user.name "aleroxac"
+        git config --global user.email "acardoso.ti@gmail.com"
+    ;;
+    "show")
+        git config user.name
+    ;;
+esac
+

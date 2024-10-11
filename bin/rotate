@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+ROTATE_LOG='/var/log/rotate_manual.log'
+NOW=$(date +%Y-%m-%d_%H-%M-%S)
+
+function log() {
+ echo  "[$(date "+%Y.%m.%d %H:%M:%S") INFO] $@" >> $ROTATE_LOG
+}
+
+function logfail(){
+ echo  "[$(date "+%Y.%m.%d %H:%M:%S") ERRO] $@" >> $ROTATE_LOG
+}
+
+#testa o número de parâmetros. Caso seja menor que 1 (-lt => less than) entra no IF
+if [ $# -lt 1 ]; then
+   # Imprime o nome do script "$0" (isso eh bom para tornar um template de script) e como usá-lo 
+   echo "USO: /data/latam/scripts/rotate file.log"
+
+   # Sai do script com código de erro 1 (falha)
+   exit 1
+else
+  file="$@"
+  for file in "$@"; do
+    loginfo "Rotacionando arquivo ${file}"
+
+    #if gzip -9vc "${file}" > "${file}.${NOW}.gz"; then
+    if mv "${file}" "${file}-${NOW}"; then
+      loginfo "Feito! Truncando arquivo..."
+
+      if cp /dev/null "${file}"; then
+        loginfo "OK, arquivo ${file} truncado"
+      else
+        logfail "Erro ao truncar arquivo ${file}"
+      fi
+      
+    else
+      logfail "Falha ao compactar arquivo ${file}"
+    fi
+  done
+fi

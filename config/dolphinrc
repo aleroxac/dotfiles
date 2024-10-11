@@ -1,0 +1,66 @@
+Height 1080=1040
+MenuBar=Disabled
+State=AAAA/wAAAAD9AAAAAwAAAAAAAAC0AAAD6vwCAAAAAvsAAAAWAGYAbwBsAGQAZQByAHMARABvAGMAawAAAAAmAAAA8AAAAF0BAAAD+wAAABQAcABsAGEAYwBlAHMARABvAGMAawEAAAAmAAAD6gAAAF0BAAADAAAAAQAAALsAAAPq/AIAAAAB+wAAABAAaQBuAGYAbwBEAG8AYwBrAAAAACYAAAPqAAABDwEAAAMAAAADAAAHgAAAAL78AQAAAAH7AAAAGAB0AGUAcgBtAGkAbgBhAGwARABvAGMAawAAAAAAAAAHgAAAAtABAAADAAAGywAAA+oAAAAEAAAABAAAAAgAAAAI/AAAAAEAAAACAAAAAQAAABYAbQBhAGkAbgBUAG8AbwBsAEIAYQByAQAAAAD/////AAAAAAAAAAA=
+Width 1920=1920
+
+[CompactMode]
+FontWeight=50
+
+[Desktop Entry]
+DefaultProfile=
+
+[DetailsMode]
+FontWeight=50
+
+[Favorite Profiles]
+Favorites=
+
+[General]
+AutoExpandFolders=true
+BrowseThroughArchives=true
+FilterBar=true
+LockPanels=false
+RememberOpenedTabs=false
+ShowCopyMoveMenu=true
+ShowFullPath=true
+ShowFullPathInTitlebar=true
+SortingChoice=CaseSensitiveSorting
+Version=200
+ViewPropsTimestamp=2019,10,4,15,3,34
+
+[IconsMode]
+FontWeight=50
+IconSize=96
+
+[KPropertiesDialog]
+DP-2 Height 1080=443
+DP-2 Width 1920=549
+Height 1080=542
+Width 1920=579
+
+[MainWindow]
+DP-2 Height 1080=1020
+DP-2 Width 1920=1920
+DP-2 XPosition=0
+DP-2 YPosition=40
+Height 1080=1020
+State=AAAA/wAAAAD9AAAAAwAAAAAAAACdAAADyPwCAAAAAvsAAAAUAHAAbABhAGMAZQBzAEQAbwBjAGsAAAAANAAAA8gAAAARAP////sAAAAWAGYAbwBsAGQAZQByAHMARABvAGMAawEAAAA0AAADyAAAAFAA////AAAAAQAAASYAAAPI/AIAAAAB+wAAABAAaQBuAGYAbwBEAG8AYwBrAQAAADQAAAPIAAAA/wD///8AAAADAAAHgAAAAL78AQAAAAH7AAAAGAB0AGUAcgBtAGkAbgBhAGwARABvAGMAawAAAAAAAAAHgAAAACIA////AAAFswAAA8gAAAAEAAAABAAAAAgAAAAI/AAAAAEAAAACAAAAAQAAABYAbQBhAGkAbgBUAG8AbwBsAEIAYQByAQAAAAD/////AAAAAAAAAAA=
+ToolBarsMovable=Disabled
+Width 1920=1920
+
+[Notification Messages]
+ConfirmTrash=true
+
+[PreviewSettings]
+Plugins=appimagethumbnail,cursorthumbnail,fontthumbnail,textthumbnail,audiothumbnail,djvuthumbnail,comicbookthumbnail,opendocumentthumbnail,kraorathumbnail,ebookthumbnail,windowsexethumbnail,imagethumbnail,windowsimagethumbnail,exrthumbnail,jpegthumbnail,svgthumbnail,directorythumbnail
+
+[Search]
+Location=Everywhere
+
+[SettingsDialog]
+Height 1080=449
+Width 1920=826
+
+[ViewPropertiesDialog]
+Height 1080=318
+Width 1920=422

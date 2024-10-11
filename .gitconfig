@@ -1,0 +1,39 @@
+[user]
+	email = acardoso.ti@gmail.com
+	name = aleroxac
+
+[core]
+	editor = vim
+
+[alias]
+    s = status
+    l = log
+    ck = checkout
+    cm = commit
+    t = tag
+    pu = pull
+    ps = push
+
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+
+[pager]
+    tag = cat
+    branch = cat
+    log = cat
+
+[init]
+	defaultBranch = main
+
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
+
+
+# ----- work
+[url "git@bitbucket.org:"]
+	insteadOf = https://bitbucket.org/

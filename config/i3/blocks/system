@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+cpuUsage(){
+    # Source: http://askubuntu.com/a/450136
+
+    URGENT_VALUE=90
+
+    PREV_TOTAL=0
+    PREV_IDLE=0
+
+    cpuFile="/tmp/.cpu"
+
+    if [[ -f "${cpuFile}" ]]; then
+        fileCont=$(cat "${cpuFile}")
+        PREV_TOTAL=$(echo "${fileCont}" | head -n 1)
+        PREV_IDLE=$(echo "${fileCont}" | tail -n 1)
+    fi
+
+    CPU=(`cat /proc/stat | grep '^cpu '`) # Get the total CPU statistics.
+        unset CPU[0]                          # Discard the "cpu" prefix.
+        IDLE=${CPU[4]}                        # Get the idle CPU time.
+
+    # Calculate the total CPU time.
+    TOTAL=0
+
+    for VALUE in "${CPU[@]:0:4}"; do
+        let "TOTAL=$TOTAL+$VALUE"
+    done
+
+    if [[ "${PREV_TOTAL}" != "" ]] && [[ "${PREV_IDLE}" != "" ]]; then
+        # Calculate the CPU usage since we last checked.
+        let "DIFF_IDLE=$IDLE-$PREV_IDLE"
+        let "DIFF_TOTAL=$TOTAL-$PREV_TOTAL"
+        let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
+        echo "${DIFF_USAGE}%"
+    else
+        echo "?"
+    fi
+
+    # Remember the total and idle CPU times for the next check.
+    echo "${TOTAL}" > "${cpuFile}"
+    echo "${IDLE}" >> "${cpuFile}"
+
+    if [[ "${DIFF_USAGE}" -gt 0 ]] && [[ "${DIFF_USAGE}" -gt "${URGENT_VALUE}" ]]; then
+        exit 33
+    fi
+}
+
+getPackages() {
+    if [[ -n $(type -P pacman) ]];then
+        pacman -Q | wc -l
+    elif [[ -n $(type -P rpm) ]]; then
+        rpm -qa | wc -l
+    elif [[ -n $(type -P dpkg) ]]; then
+        dpkg --get-selections | wc -l
+    fi
+}
+
+getUpdates() {
+    if  [[ -n $(type -P paru) ]]; then
+        #paru -Syy
+        UPDATES_AVAILABLE=$(paru -Qu | grep -v ignorado | wc -l)
+        [ "${UPDATES_AVAILABLE}" -gt 0 ] && echo "${UPDATES_AVAILABLE}"
+    fi
+}
+
+instance="${BLOCK_INSTANCE:-user}"
+
+case "${instance}" in
+    'cpu')  cpuUsage                                                                                ;;
+    'cpu-temp') sensors | grep Tctl: | tail -1 | awk '{print $2,$3}' | tr -d '+'                    ;;
+    'cpu-volt') sensors | grep Vcore: | tail -1 | awk '{print $2,$3}' | tr -d ' '                   ;;
+    'cpu-freq') echo "$(lscpu | grep 'CPU MHz máx' | awk '{print $4}' | awk -F, '{print $1}')MHz"   ;;
+    'fan')        sensors | grep fan4: | tail -1 | awk '{print $2,$3}'                              ;;
+    'gpu')        nvidia-smi --format=csv --query-gpu=utilization.gpu | tail -1 | tr -d ' '         ;;
+    'mem')        free -h | awk '/^Mem/ {print $3}' | grep -E -o '[0-9,]{2,4}[KMG]'                 ;;
+    'swap')       free -h | awk '/^Mem/ {print $3}' | grep -E -o '[0-9,]{2,4}[KMG]'                 ;;
+    'load')       echo "$(cut -d' ' -f1 /proc/loadavg)%"                                            ;;
+    'user')       echo "${USER}"                                                                    ;;
+    'locale')     localectl | sed -n 3p | sed 's/.*: //'                                            ;;
+    'keymap')     localectl | sed -n 2p | sed 's/.*: //'                                            ;;
+    'uptime')     uptime | sed "s/,.*load.*//g; s/.*up //g"                                         ;;
+    'packages')   getPackages                                                                       ;;
+    'distro')     hostnamectl | sed -n 2p | sed 's/.*: //'                                          ;;
+    'kernel')     uname -r                                                                          ;;
+    'ip-loc')     ip route get 8.8.4.4 | head -1 | awk '{print $7}'                                 ;;
+    'ip-ext')     curl ifconfig.me                                                                  ;;
+    'pwd-expire') adquery user -Q "${USER}"                                                         ;;
+    'updates')    getUpdates                                                                        ;;
+esac

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+
+function logging() {
+    LOG_TIME_DATE=$(date +'%Y-%m-%d %H:%M:%S')
+    LOG_LEVEL=$1
+    LOG_MESSAGE=$2
+    echo -e "${LOG_TIME_DATE} [${LOG_LEVEL}] - ${LOG_MESSAGE}"
+}
+
+REQUEST_STATUS=$(curl -sL https://sre-backend-node-dev.kizzye.com.br/status \
+    --cert /home/acardoso/Workspace/verifymy/sandbox/mtls/cert2.crt \
+    --key /home/acardoso/Workspace/verifymy/sandbox/mtls/cert2.key \
+    -o /dev/null \
+    -w '%{http_code}')
+
+logging INFO "status_code: ${REQUEST_STATUS}"
+

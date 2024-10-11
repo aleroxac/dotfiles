@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+VPNC_FILE=$(pgrep openvpn)
+if [[ $(date +%H) -ge 19 ]] && [[ -n ${VPNC_FILE} ]]; then
+    if [[ ${BLOCK_BUTTON} -eq 3 ]]; then
+        vpn_status
+    elif [[ ${BLOCK_BUTTON} -ne 1 ]]; then
+        pgrep openvpn > /dev/null && notify-send -u critical "LEMBRETE" "Já deslogou da VPN?"
+    else
+        vpn_status
+    fi
+fi
+
+function vpn_status() {
+    VPNC_FILE=$(pgrep openvpn)
+    [[ -n "${VPNC_FILE}" ]] && echo "<span background='red' foreground='white'>ON</span>" || echo "OFF"
+}
+
+function vpn_on() {
+    if [[ -z ${VPNC_FILE} ]]; then
+        notify-send -u low 'VPN - Intelipost' 'Conectando na VPN...'
+        docker-compose -f ~/.vpn/aws-sso/docker-compose.yml up -d
+        sleep 5s && docker logs -n1 aws-vpn-client | xargs xdg-open > /dev/null
+        vpn_status
+        i3-msg restart
+    else
+        vpn_status
+    fi
+}
+
+function vpn_off() {
+    if [[ -n ${VPNC_FILE} ]]; then
+        docker-compose -f ~/.vpn/aws-sso/docker-compose.yml down
+        notify-send -u low 'VPN - Intelipost' 'Desconectando da VPN...'
+        vpn_status
+        amixer -q set Capture 0%
+        i3-msg restart
+    else
+        vpn_status
+    fi
+}
+
+
+case $BLOCK_BUTTON in
+  1) vpn_on     ;;
+  3) vpn_off    ;;
+  *) vpn_status ;;
+esac

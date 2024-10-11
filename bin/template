@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+
+#-----------------------------------------------------------------------------
+#AUTOR
+#	 Nome: Augusto Cardoso dos Santos
+#	 Email: acardoso.ti@gmail.com
+#	 Site: github.com/aleroxac
+
+#PROGRAMA
+#	mktpt - Make template
+
+#DECRICAO
+#	Utilitário para criação de templates de programas
+
+#CHANGELOG
+#	mktpt-1.0 # Criação do programa
+
+#### MODO DE USO
+#	mktpt [OPCAO] [NOME DO PROGRAMA]
+
+#### EXEMPLOS
+#	mktpt -c backup.sh
+
+#### INFORMACOES
+#	Este script foi baseado no projeto "organize" do Jefferson Rocha:
+#		--> https://notabug.org/jeffersonrocha/organize
+#-----------------------------------------------------------------------------
+
+
+#---------VARIAVEIS
+#------------------
+
+
+#-----------FUNCOES
+#------------------
+_create() { # Função para criar um template shell script no diretório atual
+cat > "${program_name}.sh" << EOF
+#!/usr/bin/env bash
+#-----------------------------------------------------------------------------
+#AUTOR
+#PROGRAMA
+#DECRICAO
+#CHANGELOG
+#
+#### MODO DE USO
+#### EXEMPLOS
+#### INSTALACAO
+#### REMOCAO
+#### MELHORIAS
+#### BUGS
+#### INFORMACOES
+#-----------------------------------------------------------------------------
+
+
+#-------BIBLIOTECAS
+#------------------
+
+
+#---------VERIFICAO
+#------------------
+
+
+#---------VARIAVEIS
+#------------------
+
+
+#-----------FUNCOES
+#------------------
+
+
+#------------TESTES
+#------------------
+
+
+#---------PRINCIPAL
+#------------------
+EOF
+}
+
+_help() {
+	cat << EOF
+DESCRICAO
+	Utilitário para criação de templates de programas.
+USO
+	"${0}" [OPCAO] [NOME DO PROGRAMA]
+OPTIONS
+	-c, --create 	Cria um template no diretório atual
+	-h, --help 		Mostra esta ajuda
+EOF
+}
+
+
+#---------PRINCIPAL
+#------------------
+
+case $1 in
+	-c|create) 
+		shift
+		[ -z "$1" ] && { _help; exit 1 ;}
+		program_name="$@"
+		_create
+	;;
+	-h|--help)_help ;;
+	*) _help ;;
+esac
+

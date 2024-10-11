@@ -1,0 +1,34 @@
+[global_config]
+  geometry_hinting = True
+  borderless = True
+  inactive_color_offset = 0.892857142857
+  enabled_plugins = InactivityWatch, CustomCommandsMenu, TestPlugin, ActivityWatch, TerminalShot, LaunchpadCodeURLHandler, APTURLHandler, Logger, MavenPluginURLHandler, LaunchpadBugURLHandler
+  invert_search = True
+[keybindings]
+  switch_to_tab_1 = <Shift>Tab
+  group_all = <Shift><Super>g
+[profiles]
+  [[default]]
+    background_darkness = 0.8
+    background_type = transparent
+    font = Hack Nerd Font 15
+    foreground_color = "#ffffff"
+    scrollbar_position = hidden
+    scrollback_infinite = True
+    palette = "#000000:#aa0000:#00aa00:#aa5500:#0000aa:#aa00aa:#00aaaa:#aaaaaa:#555555:#ff5555:#55ff55:#ffff55:#5555ff:#ff55ff:#55ffff:#ffffff"
+    use_system_font = False
+    bold_is_bright = True
+    copy_on_selection = True
+    title_transmit_fg_color = "#000000"
+    title_transmit_bg_color = "#0eff00"
+    title_inactive_bg_color = "#ffffff"
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      type = Terminal
+      profile = default
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+background_color="#ffffff"
+foreground_color="#000000"
+now="<span background='${background_color}' foreground='${foreground_color}'> $(date '+ %H:%M:%S') </span>"
+
+function show_datetime() {
+    echo "${now}"
+}
+
+function show_clock() {
+    xterm -geometry 53x9-5+20\
+          -bg "black"\
+          -e 'timeout 5 tty-clock -Sscb -C 2 -f "%a, %D"'
+    show_datetime
+}
+
+case $BLOCK_BUTTON in
+    1|2|3) show_clock ;;
+    *) show_datetime ;;
+esac

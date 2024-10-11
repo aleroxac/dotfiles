@@ -1,0 +1,295 @@
+# vim:ft=i3 
+
+force_xinerama yes
+set $mod Mod4
+font pango:monospace 10
+new_window pixel 0
+new_float normal
+hide_edge_borders true
+floating_modifier $mod
+
+
+
+# ---------- i3-gaps
+gaps inner 10
+gaps outer 10
+smart_gaps on
+
+
+
+# ---------- keybinds shortcuts
+bindsym $mod+g exec google-chrome-stable
+bindsym $mod+n exec google-chrome-stable https://www.netflix.com/browse/my-list
+bindsym $mod+e exec nautilus
+bindsym $mod+c exec code
+bindsym $mod+l exec ~/.dotfiles/bin/lock
+bindsym $mod+o exec oblogout
+bindsym $mod+F2 exec amixer set Master 2%-
+bindsym $mod+F3 exec amixer set Master 2%+
+#bindsym $mod+Return exec alacritty -e "tmux"
+bindsym $mod+Return exec terminator
+bindsym $mod+Shift+c exec gnome-calculator
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exit
+bindsym $mod+x kill
+bindsym $mod+Print exec flameshot gui
+bindsym $mod+Shift+w exec ~/.dotfiles/bin/openworkspace
+bindsym --release Print exec flameshot full -p ~/Documents/Pictures/screenshots
+bindsym $mod+Escape exec skippy-xd &
+
+
+# ---------- temporary shortcuts
+bindsym $mod+Shift+s exec pulseaudio -k
+
+
+
+
+# ---------- startup applications
+exec --no-startup-id numlockx on
+exec --no-startup-id amixer set Master 70%
+exec --no-startup-id amixer -q set Capture 0%
+exec --no-startup-id nitrogen --restore
+exec --no-startup-id dropbox start
+exec --no-startup-id dunst &
+exec --no-startup-id nm-applet &
+exec --no-startup-id xrdb ~/.dotfiles/.Xresources 
+exec --no-startup-id compton --config /home/acardoso/.comptonrc &
+exec --no-startup-id barrier &
+
+#exec --no-startup-id picom -cCGfF -o 0.38 -O 200 -I 200 -t 0 -l 0 -r 3 -D2 -m 0.88 &
+#exec --no-startup-id barrier &
+#exec --no-startup-id synclient VertEdgeScroll=1 TapButton1=1 TapButton2=1 TapButton3=1
+#exec --no-startup-id VBoxClient-all &
+#exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+
+
+
+# ---------- Aplicações abertas em modo Floating
+for_window [class="Nitrogen"] floating enable sticky enable border normal
+for_window [instance=lxappearance] floating enable
+for_window [instance=pavucontrol] floating enable resize set 840 680
+for_window [class="XTerm"] floating enable
+for_window [instance="gnome-calculator"] floating enable
+
+
+
+# ---------- touchpad tweaks
+exec synclient PalmDetect=1
+exec synclient TapButton1=1
+exec synclient TapButton2=1
+exec synclient TapButton3=1
+
+
+
+# ---------- multimedia keys
+bindsym XF86AudioPlay exec "mpc toggle"
+bindsym XF86AudioStop exec "mpc stop"
+bindsym XF86AudioNext exec "mpc next"
+bindsym XF86AudioPrev exec "mpc prev"
+bindsym XF86AudioRaiseVolume exec "amixer set Master 2%+"
+bindsym XF86AudioLowerVolume exec "amixer set Master 2%-"
+
+
+
+# ---------- rofi bindings
+bindsym $mod+d exec rofi -show run -theme DarkBlue -lines 10 -separator-style none -font "Hack 10"
+bindsym $mod+Shift+d exec rofi -sidebar-mode -show-icons -show drun -theme DarkBlue -lines 10 -font "Hack 10" 
+bindsym $mod+Ctrl+d exec dmenu_run 
+bindsym $mod+Tab exec rofi -show-icons -show window -theme DarkBlue -lines 10 -font "Hack 10"
+
+
+
+# ---------- change focus
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+
+
+# ---------- move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+ccedilla move right
+
+
+
+# ---------- alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+
+
+# ---------- orientation splits and layouts
+bindsym $mod+h split h
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle 
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+t layout toggle split
+
+
+
+# ---------- toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+
+
+
+# ---------- workspaces
+set $workspace1 "web:"
+set $workspace2 "code:"
+set $workspace3 "work:"
+set $workspace4 "other:"
+#set $workspace5 "5"
+#set $workspace6 "6"
+#set $workspace7 "7"
+#set $workspace8 "8"
+#set $workspace9 "9"
+#set $workspace0 "0"
+
+# ----------  switch to workspace
+bindsym $mod+1 workspace $workspace1
+bindsym $mod+2 workspace $workspace2
+bindsym $mod+3 workspace $workspace3
+bindsym $mod+4 workspace $workspace4
+#bindsym $mod+5 workspace $workspace5
+#bindsym $mod+6 workspace $workspace6
+#bindsym $mod+7 workspace $workspace7
+#bindsym $mod+8 workspace $workspace8
+#bindsym $mod+9 workspace $workspace9
+#bindsym $mod+0 workspace $workspace0
+
+# ----------  Move to workspace with focused container
+bindsym $mod+Shift+1 move container to workspace $workspace1
+bindsym $mod+Shift+2 move container to workspace $workspace2
+bindsym $mod+Shift+3 move container to workspace $workspace3
+bindsym $mod+Shift+4 move container to workspace $workspace4
+#bindsym $mod+Shift+5 move container to workspace $workspace5
+#bindsym $mod+Shift+6 move container to workspace $workspace6
+#bindsym $mod+Shift+7 move container to workspace $workspace7
+#bindsym $mod+Shift+8 move container to workspace $workspace8
+#bindsym $mod+Shift+9 move container to workspace $workspace9
+#bindsym $mod+Shift+0 move container to workspace $workspace0
+
+# ---------- navigate workspaces next / previous
+bindsym $mod+Ctrl+Right workspace next
+bindsym $mod+Ctrl+Left workspace prev
+
+
+
+# ---------- Modes
+mode "$switch_screen" {
+    bindsym d exec dswitch dual
+    bindsym s exec dswitch shadow
+    bindsym Escape mode "default"
+    bindsym Return mode "default"
+}
+set $switch_screen Launch: (d) dual-monitor,  (s) single-monitor
+bindsym $mod+p mode "$switch_screen"
+
+
+mode "$mode_system" {
+    bindsym l exec --no-startup-id $Locker, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym s exec --no-startup-id systemctl poweroff -i, mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+set $Locker scrot /tmp/screen.png && /usr/bin/betterlockscreen -u /tmp/screen.png -b 3 && /usr/bin/betterlockscreen --lock blur
+set $mode_system System: (l) lock, (e)logout, (r) reboot, (s) shutdown
+bindsym $mod+i mode "$mode_system"
+
+
+mode "mode_resize" {
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym ccedilla resize grow width 10 px or 10 ppt
+
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+r mode "mode_resize"
+
+
+
+
+# colors
+set $base00 #002b36
+set $base01 #073642
+set $base02 #586e75
+set $base03 #657b83
+set $base04 #839496
+set $base05 #93a1a1
+set $base06 #eee8d5
+set $base07 #fdf6e3
+set $base08 #dc322f
+set $base09 #cb4b16
+set $base0A #b58900
+set $base0B #859900
+set $base0C #7ffc51
+set $base0D #268bd2
+set $base0E #6c71c4
+set $base0F #d33682
+set $base0G #2aa198
+
+
+# Window Colours            border  background  text    indicator
+client.focused              #000000 #000000     #ffffff #ffffff
+client.focused_inactive     $base02 $base02     $base03 $base03
+client.unfocused            #333333 #333333     #4d4d4d #4d4d4d
+client.urgent               #e1ff00 #e1ff00     #ff3300 #ff3300
+
+
+
+bar {
+    status_command i3blocks -c ~/.config/i3/i3blocks
+    #tray_output none
+    position top
+    font pango:Monospace 11
+    separator_symbol "  "
+
+        colors {
+        separator   #ffffff
+        background  #000000
+        statusline  #ffffff
+
+        #                   border  background  text
+        focused_workspace   $base0C $base0C     $base00
+        active_workspace    $base02 $base02     $base07
+        inactive_workspace  $base01 $base0G     $base00
+        urgent_workspace    $base0D $base00     $base0D
+    }
+}
+
+bar {
+    status_command i3blocks -c ~/.config/i3/i3blocks.notebook
+    #status_command bumblebee-status -m cpu memory disk datetime -t dracula-powerline
+    tray_output none
+    position bottom
+    font pango:Monospace 11
+    separator_symbol "  "
+
+        colors {
+        separator   #ffffff
+        background  #000000
+        statusline  #ffffff
+
+        #                   border  background  text
+        focused_workspace   $base0C $base0C     $base00
+        active_workspace    $base02 $base02     $base07
+        inactive_workspace  $base01 $base0G     $base00
+        urgent_workspace    $base0D $base00     $base0D
+    }
+}

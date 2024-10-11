@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+cluster=$1 
+
+temp_kubeconfig="/tmp/check_cluster_${cluster}_kubeconfig"
+[ -f ${temp_kubeconfig} ] && rm ${temp_kubeconfig}
+cp ~/.kube/config ${temp_kubeconfig}
+
+KUBECONFIG=${temp_kubeconfig}
+parallel -j4 ::: \
+    "echo -e '\n---------- CLUSTER: ${cluster} ----------'; kubectx gke_onyo-149512_us-east1_onyo-${cluster}" \
+    "echo '----- FALCON_CONTAINER -----'; kubectl get falconcontainer --no-headers | column -t" \
+    "echo '----- FALCON_SYSTEM -----'; kubectl get pods -n falcon-system --no-headers | column -t" \
+    "echo '----- FALCON_OPERATOR -----';kubectl get pods -n falcon-operator --no-headers | column -t"
+
+

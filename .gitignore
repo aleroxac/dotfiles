@@ -1,0 +1,13 @@
+.aws/
+.docker/
+.gnupg/
+.krew/
+.kube/
+.ssh/
+.tmux/
+.vim/autoload/
+.vim/plugged/
+.vpn/
+config/argocd/
+oh-my-zsh/
+.secret

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# ---------- VARIABLES
+MIN_ITEMS=10
+DEFAULT_TRASH_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}/Trash"
+TRASH_DIR="${BLOCK_INSTANCE}"
+
+# ---------- CHECKS
+[[ -z "${TRASH_DIR}" ]] && TRASH_DIR="${HOME}/.local/share/Trash"
+TRASH_COUNT=$(find "${TRASH_DIR}" -mindepth 2 | wc -l)
+
+# ---------- FUNCTIONS
+open_trash_dir() { xdg-open "${TRASH_DIR}"/files ;}
+
+clean_trash_dir() { 
+    find ${TRASH_DIR} -mindepth 2 -exec rm -rf {} +
+}
+
+check_clicks() {
+    # Left click
+    [[ "${BLOCK_BUTTON}" -eq 1 ]] && open_trash_dir
+    # Right click
+    [[ "${BLOCK_BUTTON}" -eq 3 ]] && clean_trash_dir
+}
+
+# ---------- MAIN
+[[ "${TRASH_COUNT}" -ge "${MIN_ITEMS}" ]] && echo "${TRASH_COUNT}" && check_clicks

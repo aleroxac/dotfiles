@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+END_DATE="${BLOCK_INSTANCE}"
+NEXT_FRIDAY=$(date --date "next Friday" "+%m/%d/%Y %H:%M:%S")
+
+[[ -z ${END_DATE} ]] && END_DATE="${NEXT_FRIDAY}"
+END_DATE=$(date --date="${END_DATE}" '+%s')
+CUR_DATE=$(date "+%s")
+DIFF_DATE=$((END_DATE - CUR_DATE))
+DIFF=""
+
+[[ "${DIFF_DATE}" -le 0 ]] && exit 33
+[[ "${DIFF_DATE}" -ge 86400 ]] && DIFF="[$((DIFF_DATE / 86400))]"
+
+DIFF+=$(date -u -d "@${DIFF_DATE}" +"%H:%M:%S")
+echo "${DIFF}"

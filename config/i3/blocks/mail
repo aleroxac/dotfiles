@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+MIN_EMAILS=1
+
+function get_emails() {
+    source "${HOME}"/.dotfiles/secret
+
+    [[ "${1}" == "personal" ]] && USER_EMAIL="${EMAIL}" && USER_EMAIL_PASS="${EMAIL_PASS}"
+    [[ "${1}" == "work" ]] && USER_EMAIL="${EMAIL2}" && USER_EMAIL_PASS="${EMAIL_PASS2}"
+    qtd_mail="$(curl -su "${USER_EMAIL}":"${USER_EMAIL_PASS}" https://mail.google.com/mail/feed/atom)"
+
+    [[ "${1}" == "personal" ]] && email_profile=0 && count_emails="${qtd_mail:207:1}"
+    [[ "${1}" == "work" ]] && email_profile=1 && count_emails="${qtd_mail:218:1}"
+    mailbox_url_base="https://mail.google.com/mail/u"
+    gmail_url="${mailbox_url_base}/${email_profile}/\#inbox"
+
+    [[ "${count_emails}" -ge "${MIN_EMAILS}" ]] && echo "${count_emails}"
+}
+
+
+instance="${BLOCK_INSTANCE:-personal}"
+case "${instance}" in
+    'personal')  get_emails personal  ;;
+    'work'    )  get_emails work      ;;
+esac

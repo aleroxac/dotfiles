@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+. ~/.dotfiles/.env
+. ~/.dotfiles/.aliases
+. ~/.dotfiles/.secret
+
+if [[ $(sudo fgconsole 2>/dev/null) == 1 ]]; then
+    if ! pgrep xinit > /dev/null; then
+        startx -- vt1
+    fi
+fi
+
+
+## load work ssh key to ssh-agent
+eval "$(ssh-agent -s)" &> /dev/null
+ssh-add ~/.ssh/verifymy &> /dev/null
+

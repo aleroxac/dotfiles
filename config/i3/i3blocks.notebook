@@ -1,0 +1,145 @@
+# vim:ft=config
+command=~/.config/i3/blocks/$BLOCK_NAME
+separator_block_width=20
+markup=none
+
+
+# Icons
+#                                      ♫ ♬
+#                            
+#         >_                      ♽  💻
+#                     ⚅                ⌚  ⚉ ⚛
+# ⌧  ⌨                        ⛟
+#       ☀ ☁  ☂  ☢  ☰ ☱ ☲ ☳ ☴ ☵ ☶ ☷  ⛾  ✅
+# ➀  ➁  ➂  ➃  ➄  ➅  ➆  ➇  ➈  ➉ ➊  ➋  ➌  ➍  ➎  ➏  ➐  ➑  ➒  ➓
+#                             
+# ☰  ☱  ☲  ☳   ☴  ☵  ☶  ☷  ᗤ ᗣ       ⏰ ⌚ 
+
+#           ⛾  ⛟  ⌨               💻                             
+# ♽                                                      
+#   ⏰ ⌚   ➊  ➋  ➌  ➍  ➎  ➏  ➐  ➑  ➒  ➓    
+
+
+#[notebook]
+#label=
+#instance=microphone
+#interval=1
+
+#[notebook]
+#label=
+#instance=webcam
+#interval=5
+
+#[notebook]
+#label=
+#instance=battery
+#interval=5
+
+#[notebook]
+#label=
+#instance=brightness
+#interval=5
+
+[system]
+label=⌚
+instance=cpu-freq
+interval=10
+
+[system]
+label= 
+instance=fan
+interval=10
+
+[system]
+label= 
+interval=10
+instance=cpu-temp
+
+[system]
+label=
+interval=10
+instance=cpu-volt
+
+#[system]
+#label=
+#instance=gpu
+#interval=10
+
+[system]
+label= 
+instance=cpu
+interval=10
+
+[system]
+label= 
+instance=load
+interval=10
+
+[system]
+label= 
+instance=mem
+interval=10
+
+[disk]
+label= 
+instance=/;free
+interval=once
+
+[bluetooth]
+label= 
+interval=once
+
+[firewall]
+label= 
+interval=once
+markup=pango
+
+[vpn]
+label= 
+interval=600
+markup=pango
+
+[system]
+label= 
+instance=locale
+interval=once
+
+[system]
+label= 
+instance=keymap
+interval=once
+
+[countdown]
+instance=today 18:30
+label= 
+interval=1
+
+[system]
+label= 
+instance=uptime
+interval=600
+
+[network]
+label= 
+instance=wlp2s0
+interval=600
+
+[network]
+label= 
+instance=enp5s0
+interval=600
+
+[bandwidth]
+instance=enp5s0;in
+label=
+interval=600
+
+[bandwidth]
+instance=enp5s0;out
+label=
+interval=600
+
+[system]
+label= 
+instance=user
+interval=once

@@ -1,0 +1,16 @@
+# Sample profile by groups keys
+
+g logo ff0000
+g indicators ff0000
+g multimedia 96ecff
+g fkeys 96ecff
+g modifiers 96ecff
+g arrows 96ecff
+g numeric 96ecff
+g functions 96ecff
+g keys 96ecff
+g gkeys 96ecff
+k enter ff0000
+
+c
+

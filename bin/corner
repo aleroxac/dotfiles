@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Script to monitor mouse position and run skippy-xd (assumed to already be installed)
+# whenever the mouse is moved into the bottom left corner (like a hot corner)
+#
+# Requires xdotool
+#
+# if script is called /home/user/corner then run it in your .xinitrc as
+# /home/user/corner >/dev/null 2>&1 &
+
+# Retreive screen height
+SCREEN_HEIGHT=`xwininfo -root|sed '/Height/!d;s/.* //'`
+# subtract 1 as 0..899 for 900 xwininfo height screen
+SCREEN_HEIGHT=`expr ${SCREEN_HEIGHT} - 1` 
+#BOTTOM_LEFT="0x${SCREEN_HEIGHT}"
+BOTTOM_LEFT="0x1079"
+
+while : ;do
+   CURRENT_MOUSE_POSITION=`xdotool getmouselocation | sed 's/ sc.*//; s/.://g; s/ /x/'`
+   if [ $CURRENT_MOUSE_POSITION = $BOTTOM_LEFT ]; then
+    skippy-xd
+   fi
+   sleep 0.1
+done

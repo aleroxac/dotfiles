@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+MIN_NEWS=1
+. ${HOME}/.dotfiles/secret
+
+url="https://cloud.feedly.com/v3/streams/contents?streamId=user/${FEEDLY_ID}/category/global.all&unreadOnly=true&count=500"
+token="Authorization: OAuth ${FEEDLY_KEY}" 
+news=$(curl -s -H "$token" "$url" | python -m json.tool | grep -c 'fingerprint')
+feedly_url="https://feedly.com/i/my"
+
+if [ "${news}" -ge "${MIN_NEWS}" ]; then
+    echo "${news}"
+fi

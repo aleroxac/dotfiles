@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+fzf -x -e --height 100%\
+          --layout default\
+          --info inline\
+          --border\
+          --color=dark\
+          --preview "bat --style=numbers\
+                         --color=always\
+                         --line-range :100\
+                         --theme Dracula -m '*.conf:INI' {}"\
+          --preview-window 50:120\
+          --color 'fg:#bbccdd,fg+:#ff0000,bg:#000000,border:#baffbf' ${HOME} | xargs xdg-open

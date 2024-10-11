@@ -1,0 +1,244 @@
+#!/bin/bash
+
+getNetworkInfo(){
+    device="${BLOCK_INSTANCE:-wlan0}"
+    status=$(cat /sys/class/net/${device}/operstate)
+
+    URGENT_VALUE=20
+
+    if [[ "${status}" == "up" ]]; then
+        if [[ -d "/sys/class/net/${device}/wireless" ]]; then
+            quality=$(grep ${device} /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
+            echo "${quality}%"
+            echo "${quality}%"
+            echo ""
+
+            if [[ "${quality}" -le "${URGENT_VALUE}" ]]; then
+                exit 33
+            fi
+        else
+            echo "on"
+        fi
+    fi
+}
+
+firewallctl() {
+    if [[ "${BLOCK_BUTTON}" -eq 1 ]]; then
+        sudo ufw enable
+    elif [[ "${BLOCK_BUTTON}" -eq 2 ]]; then
+        sudo ufw reload
+    elif [[ "${BLOCK_BUTTON}" -eq 3 ]]; then
+        sudo ufw disable
+    fi
+
+    status=$(sudo ufw status 2>/dev/null)
+    [[ $? -gt 0 ]] && exit
+
+    if [[ "${status}" != *inactive* ]]; then
+        echo "on"
+    else
+        echo "off"
+    fi
+}
+
+getVPNStatus(){
+    VPNC_FILE='/var/run/vpnc.pid'
+    [[ -e "${VPNC_FILE}" ]] && echo 'on' || echo 'off'
+}
+
+getBandWidth() {
+    # Source: http://www.onlamp.com/pub/a/linux/2000/11/16/LinuxAdmin.html
+
+    INSTANCE="${BLOCK_INSTANCE}"
+    # If you don't like you can use any other IP
+    INTERFACE="$(ip route get 8.8.8.8 | grep -Po '(?<=(dev )).*(?= src)')"
+
+    if [[ "${INSTANCE}" = "" ]]; then
+        INSTANCE="${INTERFACE};both"
+    fi
+
+    DISPLAY=$(echo "${INSTANCE}" | awk -F ';' '{print $2}')
+    INSTANCE=$(echo "${INSTANCE}" | awk -F ';' '{print $1}')
+
+    if [[ "${DISPLAY}" = "" ]]; then
+        DISPLAY="both"
+    fi
+
+    ONE_KB=1024
+    ONE_MB=$(echo "${ONE_KB}*1024" | bc -l)
+    TEN_MB=$(echo "${ONE_MB}*10" | bc -l)
+    OHD_MB=$(echo "${TEN_MB}*10" | bc -l)
+
+    URGENT_VALUE="${ONE_MB}"
+
+    PREV_IN=0
+    PREV_OUT=0
+
+    PREV_FILE="/tmp/.bandwidth"
+
+    if [[ -f "${PREV_FILE}" ]]; then
+        PREV_CONT=$(cat "${PREV_FILE}")
+        PREV_IN=$(echo "${PREV_CONT}" | head -n 1)
+        PREV_OUT=$(echo "${PREV_CONT}" | tail -n 1)
+    fi
+
+    BANDWIDTH=$(grep "${INSTANCE}" /proc/net/dev | awk -F: '{print  $2}' | awk '{print $1" "$9}')
+
+    if [[ "${BANDWIDTH}" = "" ]]; then
+        exit
+    fi
+
+    BYTES_IN=$(echo "${BANDWIDTH}" | awk -F ' ' '{print $1}')
+    BYTES_OUT=$(echo "${BANDWIDTH}" | awk -F ' ' '{print $2}')
+
+    function FormatNumber() {
+        if [[ "${1}" -ge "${OHD_MB}" ]]; then
+            echo $(echo "scale=0;${1}/${ONE_MB}" | bc -l)"mb"
+        elif [[ "${1}" -ge "${TEN_MB}" ]]; then
+            echo $(echo "scale=1;${1}/${ONE_MB}" | bc -l)"mb"
+        elif [[ "${1}" -ge "${ONE_MB}" ]]; then
+            echo $(echo "scale=2;${1}/${ONE_MB}" | bc -l)"mb"
+        elif [[ "${1}" -ge "${ONE_KB}" ]]; then
+            echo $(echo "scale=0;${1}/${ONE_KB}" | bc -l)"kb"
+        else
+            echo "${1}""b"
+        fi
+    }
+
+    if [[ "${PREV_IN}" != "" ]] && [[ "${PREV_OUT}" != "" ]]; then
+        # Calculate the CPU usage since we last checked.
+        DIFF_IN=$(echo "scale=0;${BYTES_IN} - ${PREV_IN}" | bc -l)
+        DIFF_OUT=$(echo "scale=0;${BYTES_OUT} - ${PREV_OUT}" | bc -l)
+        DIFF_TOTAL=0
+
+        USAGE_IN=$(FormatNumber "${DIFF_IN}")
+        USAGE_OUT=$(FormatNumber "${DIFF_OUT}")
+
+        if [[ "${DISPLAY}" = "both" ]]; then
+            echo "${USAGE_IN} : ${USAGE_OUT}"
+            echo "${USAGE_IN} : ${USAGE_OUT}"
+            echo ""
+            DIFF_TOTAL=$((DIFF_TOTAL+DIFF_IN))
+            DIFF_TOTAL=$((DIFF_TOTAL+DIFF_OUT))
+        elif [[ "${DISPLAY}" = "in" ]]; then
+            echo "${USAGE_IN}"
+            echo "${USAGE_IN}"
+            echo ""
+            DIFF_TOTAL=$((DIFF_TOTAL+DIFF_IN))
+        elif [[ "${DISPLAY}" = "out" ]]; then
+            echo "${USAGE_OUT}"
+            echo "${USAGE_OUT}"
+            echo ""
+            DIFF_TOTAL=$((DIFF_TOTAL+DIFF_OUT))
+        fi
+    else
+        echo "?"
+        echo "?"
+        echo ""
+    fi
+
+    # Remember the total and idle CPU times for the next check.
+    echo "${BYTES_IN}" > "${PREV_FILE}"
+    echo "${BYTES_OUT}" >> "${PREV_FILE}"
+
+    if [[ "${DIFF_TOTAL}" -ge "${URGENT_VALUE}" ]]; then
+        exit 33
+    fi
+}
+
+getFeeds() {
+    # ID: e326b303-6cb6-4843-a95d-d1eadbc6d9da
+    # EXPIRATION: 2019-03-07
+    # json formatter = python -m json.tool
+
+    # Collections
+    # http://www.diolinux.com.br/feeds/posts/default
+    # http://vidadesuporte.com.br/feed/
+    # http://vidadeprogramador.com.br/feed/
+    # http://feeds.feedburner.com/ItsFoss
+    # http://www.tecmint.com/feed/
+    # http://www.baixaki.com.br/rss/tecnologia.xml
+    # http://blog.4linux.com.br/feed/
+
+
+    url='https://cloud.feedly.com/v3/streams/contents?streamId=user/e326b303-6cb6-4843-a95d-d1eadbc6d9da/category/global.all&unreadOnly=true'
+    token="Authorization: OAuth ${FEEDLY_KEY}"
+    news=$(curl -s -H "$token" "$url" | python -m json.tool | grep -c 'fingerprint')
+
+    case $BLOCK_BUTTON in
+        1) google-chrome-stable https://feedly.com/i/my 2>/dev/null > /dev/null ;;
+        *) echo $news ;;
+    esac
+}
+
+getMails(){
+    qtd_mail="$(curl -su ${EMAIL_USER_EMAIL}:${EMAIL_USER_PASSWORD} https://mail.google.com/mail/feed/atom)"
+
+    case $BLOCK_BUTTON in
+        1) google-chrome-stable https://mail.google.com/mail/u/0/\#inbox 2> /dev/null > /dev/null; echo ${qtd_mail:207:1} ; BLOCK_BUTTON=0 ;;
+        *) echo ${qtd_mail:207:1} ;;
+    esac
+}
+
+getWeather() {
+    #!/bin/bash
+    # Based on http://openweathermap.org/current
+    
+    source ~/.dotfiles/.secret
+    API_KEY="${OPENWEATHERMAP_API_KEY}"
+
+    # Check on http://openweathermap.org/find
+    CITY_ID="${BLOCK_INSTANCE:-3448439}"
+    #CITY_ID="3470353" # Barueri - SP, Brasil
+    #CITY_ID="3448439" # São Paulo - SP, Brasil
+
+    URGENT_LOWER=0
+    URGENT_HIGHER=30
+
+    ICON_SUNNY=""
+    ICON_CLOUDY=""
+    ICON_RAINY=""
+    ICON_STORM=""
+    ICON_SNOW=""
+    ICON_FOG=""
+
+    SYMBOL_CELSIUS="°C"
+
+    WEATHER_URL="http://api.openweathermap.org/data/2.5/weather?id=${CITY_ID}&appid=${API_KEY}&units=metric&temperature.unit=celsius"
+
+    WEATHER_INFO=$(wget -qO- "${WEATHER_URL}")
+    WEATHER_MAIN=$(echo "${WEATHER_INFO}" | grep -o -e '\"main\":\"[a-Z]*\"' | awk -F ':' '{print $2}' | tr -d '"')
+    WEATHER_TEMP=$(echo "${WEATHER_INFO}" | grep -o -e '\"temp\":\-\?[0-9]*' | awk -F ':' '{print $2}' | tr -d '"')
+
+    if [[ "${WEATHER_MAIN}" = *Snow* ]]; then
+        echo "${ICON_SNOW} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+    elif [[ "${WEATHER_MAIN}" = *Rain* ]] || [[ "${WEATHER_MAIN}" = *Drizzle* ]]; then
+        echo "${ICON_RAINY} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+    elif [[ "${WEATHER_MAIN}" = *Thunderstorm* ]]; then
+        echo "${ICON_STORM} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+    elif [[ "${WEATHER_MAIN}" = *Cloud* ]]; then
+        echo "${ICON_CLOUDY} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+    elif [[ "${WEATHER_MAIN}" = *Clear* ]]; then
+        echo "${ICON_SUNNY} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+    elif [[ "${WEATHER_MAIN}" = *Fog* ]] || [[ "${WEATHER_MAIN}" = *Mist* ]]; then
+        echo "${ICON_FOG} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+    else
+        echo "${WEATHER_MAIN} ${WEATHER_TEMP}${SYMBOL_CELSIUS}"
+    fi
+
+    #if [[ "${WEATHER_TEMP}" -lt "${URGENT_LOWER}" ]] || [[ "${WEATHER_TEMP}" -gt "${URGENT_HIGHER}" ]]; then
+    #  exit 33
+    #fi
+}
+
+instance="${BLOCK_INSTANCE:-network}"
+case "${instance}" in
+    'firewall')  firewallctl    ;;
+    'vpn')       getVPNStatus   ;;
+    'feed')      getFeeds       ;; 
+    'mail')      getMails       ;; 
+#    'network')   getNetworkInfo ;;
+#    'bandwidth') getBandWidth   ;; 
+#    'weather')   getWeather     ;; 
+esac
+

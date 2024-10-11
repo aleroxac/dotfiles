@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+helpMsg="USAGE: $0 [OPTIONS]
+  -l, --list   Mostra a lista de pacotes no cache de seu gerenciador de pacotes
+  -c, --clear  Limpa o cache do diretório ${dirpkg}"
+
+# List and clean packages in your package manager cache
+[[ -d /var/cache/pacman/pkg/ ]] && dirpkg=/var/cache/pacman/pkg
+[[ -d /var/cache/apt/archives ]] && dirpkg=/var/cache/apt/archives
+
+listGarb() { # Show the pacman pkg cache
+    (
+        du -sh $dirpkg/* 2> /dev/null;
+        du -sh ${HOME}/.local/share/Trash/{files,info,expunged}/* 2> /dev/null
+        du -sh ${HOME}/.cache/paru/clone/* 2> /dev/null
+    ) | sort -h
+
+    docker system df
+}
+
+cleanGarb() { # Clean the pacman pkg cache
+    count=$(find /var/cache/pacman/pkg/ ${HOME}/.cache/paru/clone/ ${HOME}/.local/share/Trash/{files,info,expunged}/ -maxdepth 1 | wc -l)
+    if [[ $count -gt 2 ]]; then
+        sudo rm -rf $dirpkg/*
+        if paru -V > /dev/null; then
+            paru -Sc --noconfirm > /dev/null
+            sudo rm -rf ${HOME}/.cache/paru/clone/* ${HOME}/.local/share/Trash/{files,info,expunged}/*
+        elif apt --version > /dev/null; then
+            sudo apt clean
+            sudo apt autoclean -y
+            sudo apt remove --purge $(deborphan)
+            sudo apt autoremove -y
+        fi
+    fi
+    
+    docker system prune -f
+    # [ $(docker container ls -a -q | wc -l) -ge 1 ] && docker container rm -f $(docker container ls -a -q)
+    # [ $(docker volume ls -q | wc -l) -ge 1 ] && docker volume rm -f $(docker volume ls -q)
+    # [ $(docker image ls -q | wc -l) -ge 1 ] && docker image rm -f $(docker image ls -q)
+}
+
+cleanTrash() { # Clean trash folder
+    BLOCK_BUTTON=3 ~/.config/i3/blocks/trash > /dev/null
+}
+
+if [[ ! -z "$1" ]]; then
+    case "$1" in
+        -l|--list) listGarb               ;;
+        -c|--clear) cleanGarb && listGarb ;;
+        *) echo -e "${helpMsg}"           ;;
+    esac
+else
+    listGarb
+fi

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+background_color="#ffffff"
+foreground_color="#000000"
+today=$(date '+ %A %d/%m/%Y')
+today_extended=$(date '+   %A %d %B %Y')
+
+
+function show_datetime() { 
+    echo "<span background='${background_color}' foreground='${foreground_color}'> $1 </span>  "
+}
+
+function show_calendar() { 
+    yad --calendar \
+        --width=50 \
+        --height=20 \
+        --undecorated \
+        --fixed \
+        --no-buttons \
+        --posx=1645 \
+        --posy=20
+}
+
+case $BLOCK_BUTTON in
+    1) show_datetime "${today_extended}"  ;;
+    5) show_calendar                      ;;
+    *) show_datetime "${today}"           ;;
+esac

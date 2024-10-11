@@ -1,0 +1,11 @@
+! vim: filetype=yaml
+! rofi template
+! Base16 Solarized Dark, by Ethan Schoonover (http://ethanschoonover.com/solarized)
+
+! State:           'bg',    'fg',    'bgalt', 'hlbg',  'hlfg'
+rofi.color-normal: #002b36, #fdf6e3, #002b36, #fdf6e3, #002b36
+rofi.color-urgent: #002b36, #dc322f, #002b36, #dc322f, #002b36
+rofi.color-active: #002b36, #268bd2, #002b36, #268bd2, #002b36
+!                  'bg',    'border'
+rofi.color-window: #002b36, #fdf6e3
+
